@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4G Computer Electronics | Contact</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="4g.png">
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter (clean, modern) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+    <style>
+        /* ----- GLOBAL STYLES (white background, red/yellow/black accents) ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafc;
+            --light-border: #eef2f6;
+            --text-dark: #1e1e2f;
+            --text-muted: #5e6f8d;
+            --primary-red: #ED1B24;
+            --soft-yellow: #F7FF9A;
+            --whatsapp-green: #25D366;
+            --whatsapp-dark: #128C7E;
+            --shadow-card: 0 12px 30px rgba(0, 0, 0, 0.03);
+            --shadow-hover: 0 20px 35px rgba(237, 27, 36, 0.08);
+        }
+
+        body {
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            background: var(--pure-white);
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ----- HEADER (same as gallery) ----- */
+        header {
+            background: var(--pure-white);
+            border-bottom: 1px solid var(--light-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(6px);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.02));
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            color: var(--text-dark);
+        }
+        .brand-text .red {
+            color: var(--primary-red);
+            font-weight: 800;
+        }
+
+        .desktop-nav {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .desktop-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: 0.2s;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+        }
+        .desktop-nav a:hover,
+        .desktop-nav a.active {
+            color: var(--primary-red);
+            border-bottom-color: var(--primary-red);
+        }
+
+        /* mobile menu (same as gallery) */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            cursor: pointer;
+        }
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.2);
+            z-index: 200;
+        }
+        .mobile-drawer {
+            position: fixed;
+            top:0; right:-300px;
+            width: 280px;
+            height:100%;
+            background: white;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 201;
+            padding: 40px 24px;
+        }
+        .mobile-drawer.open {
+            right:0;
+        }
+        .close-mobile {
+            position: absolute;
+            top:20px; right:20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary-red);
+        }
+        .mobile-nav {
+            list-style: none;
+            margin-top: 40px;
+        }
+        .mobile-nav li {
+            margin-bottom: 20px;
+        }
+        .mobile-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: block;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        /* ----- CONTACT HERO ----- */
+        .contact-hero {
+            background: var(--pure-white);
+            padding: 50px 0 20px;
+            text-align: center;
+        }
+        .contact-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .contact-hero h1 span {
+            color: var(--primary-red);
+            background: var(--soft-yellow);
+            padding: 4px 16px;
+            border-radius: 60px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .hero-sub {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 20px auto 0;
+        }
+
+        /* ----- BUSINESS INFO MINI CARD (optional, but shows consistency) */
+        .info-banner {
+            background: var(--off-white);
+            border-radius: 60px;
+            padding: 20px 32px;
+            margin: 40px auto 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            border: 1px solid var(--light-border);
+            max-width: 900px;
+        }
+        .info-banner-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+        .info-banner-item i {
+            color: var(--primary-red);
+            font-size: 1.3rem;
+        }
+
+        /* ----- CONTACT CARDS (3 METHODS + LOCATION BUTTON) ----- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            margin: 40px 0 50px;
+        }
+
+        .contact-card {
+            background: var(--pure-white);
+            border: 1px solid var(--light-border);
+            border-radius: 40px;
+            padding: 36px 24px 32px;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: 0.2s;
+        }
+        .contact-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary-red);
+            box-shadow: var(--shadow-hover);
+        }
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--soft-yellow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            border: 1px solid rgba(237,27,36,0.1);
+        }
+        .contact-card h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .contact-card .contact-detail {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin: 16px 0 12px;
+            word-break: break-word;
+        }
+        .contact-card .small-note {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        /* action buttons inside cards */
+        .card-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            width: 100%;
+            border: 1px solid transparent;
+        }
+        .card-btn i {
+            font-size: 1.2rem;
+        }
+        .card-btn:hover {
+            background: #c01018;
+            transform: scale(1.02);
+        }
+
+        /* WhatsApp specific button (green) */
+        .btn-wa {
+            background: var(--whatsapp-green);
+            color: white;
+        }
+        .btn-wa:hover {
+            background: #20b859;
+        }
+
+        /* location extra button (outside cards) */
+        .location-highlight {
+            background: var(--off-white);
+            border-radius: 80px;
+            padding: 40px 30px;
+            margin: 30px 0 70px;
+            border: 1px solid var(--light-border);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+        .location-text {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .location-icon {
+            background: var(--primary-red);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .address strong {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .address p {
+            color: var(--text-muted);
+        }
+        .btn-location {
+            background: var(--text-dark);
+            color: white;
+            padding: 16px 42px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+            border: 1px solid var(--text-dark);
+        }
+        .btn-location:hover {
+            background: white;
+            color: var(--text-dark);
+        }
+
+        /* ----- BUSINESS HOURS CARD (extra) ----- */
+        .hours-card {
+            background: var(--pure-white);
+            border: 1px solid var(--light-border);
+            border-radius: 50px;
+            padding: 40px;
+            margin: 40px 0 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            box-shadow: var(--shadow-card);
+        }
+        .hours-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 1.1rem;
+        }
+        .hours-item i {
+            color: var(--primary-red);
+            font-size: 2rem;
+            width: 40px;
+        }
+        .hours-item .days {
+            font-weight: 600;
+        }
+
+        /* map placeholder (just link) */
+        .map-note {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        .map-note i {
+            color: var(--primary-red);
+        }
+
+        /* footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 50px 0 30px;
+            margin-top: 40px;
+            border-top: 4px solid var(--primary-red);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 40px;
+        }
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-red);
+            padding-left: 16px;
+        }
+        .footer-col a, .footer-col p {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .footer-col a:hover {
+            color: var(--primary-red);
+        }
+        .copyright {
+            text-align: center;
+            margin-top: 50px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 700px) {
+            .desktop-nav { display: none; }
+            .mobile-menu-btn { display: block; }
+            .header-inner { height: 70px; }
+            .contact-hero h1 { font-size: 2.3rem; }
+            .location-highlight { flex-direction: column; text-align: center; }
+            .location-text { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- header (consistent) -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo-area">
+                <img src="4g.png" alt="4G" class="logo-img" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2248%22%20height%3D%2248%22%20viewBox%3D%220%200%2048%2048%22%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2224%22%20r%3D%2220%22%20fill%3D%22%23ED1B24%22%2F%3E%3Ctext%20x%3D%229%22%20y%3D%2233%22%20fill%3D%22%23F7FF9A%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%3E4G%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                <span class="brand-text"><span class="red">4G</span> COMPUTER</span>
+            </div>
+            <ul class="desktop-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <!-- admin is secret, no link -->
+            </ul>
+            <button class="mobile-menu-btn" id="mobileOpen"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- mobile drawer -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <button class="close-mobile" id="mobileClose"><i class="fas fa-times"></i></button>
+        <ul class="mobile-nav">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div style="margin-top:30px; padding-top:20px; border-top:1px solid var(--light-border);">
+            <p><i class="fas fa-phone" style="color:var(--primary-red);"></i> +256 773 232643</p>
+            <p><i class="fas fa-envelope"></i> 4gcomputerelectronics@gmail.com</p>
+        </div>
+    </div>
+
+    <!-- main contact content -->
+    <main>
+        <div class="container">
+            <!-- hero -->
+            <div class="contact-hero">
+                <h1><span>📬 get in touch</span></h1>
+                <h1>with 4G Computer Electronics</h1>
+                <div class="hero-sub">We’re here to help with any inquiry, order, or support.</div>
+            </div>
+
+            <!-- mini business banner (extra touch) -->
+            <div class="info-banner">
+                <div class="info-banner-item"><i class="fas fa-store"></i> 4.0★ verified</div>
+                <div class="info-banner-item"><i class="fas fa-clock"></i> Mon-Sat 7am-8pm · Sun 1pm-8pm</div>
+                <div class="info-banner-item"><i class="fas fa-user-tie"></i> Mr. Manasseh NDAYISABA</div>
+            </div>
+
+            <!-- 3 contact method cards (WhatsApp, Call, Email) -->
+            <div class="contact-grid">
+                <!-- 1. WhatsApp card (green button) -->
+                <div class="contact-card">
+                    <div class="card-icon"><i class="fab fa-whatsapp"></i></div>
+                    <h3>WhatsApp</h3>
+                    <div class="contact-detail">+256 773 232643</div>
+                    <div class="small-note">Quick reply · chat with us</div>
+                    <a href="https://wa.me/256773232643?text=Hello%204G%20Computer%20Electronics%2C%20I%27m%20interested%20in%20your%20services." 
+                       target="_blank" 
+                       class="card-btn btn-wa">
+                        <i class="fab fa-whatsapp"></i> Message on WhatsApp
+                    </a>
+                </div>
+
+                <!-- 2. Call card (standard red) -->
+                <div class="contact-card">
+                    <div class="card-icon"><i class="fas fa-phone-alt"></i></div>
+                    <h3>Call us</h3>
+                    <div class="contact-detail">+256 773 232643</div>
+                    <div class="small-note">Speak directly to our team</div>
+                    <a href="tel:+256773232643" class="card-btn">
+                        <i class="fas fa-phone"></i> Call now
+                    </a>
+                </div>
+
+                <!-- 3. Email card (red) using the provided gmail -->
+                <div class="contact-card">
+                    <div class="card-icon"><i class="fas fa-envelope"></i></div>
+                    <h3>Email</h3>
+                    <div class="contact-detail">4gcomputerelectronics@gmail.com</div>
+                    <div class="small-note">Send us a message anytime</div>
+                    <a href="mailto:4gcomputerelectronics@gmail.com?subject=Inquiry%20from%20website" class="card-btn">
+                        <i class="fas fa-paper-plane"></i> Send email
+                    </a>
+                </div>
+            </div>
+
+            <!-- location block with button to location.html (auto open) -->
+            <div class="location-highlight">
+                <div class="location-text">
+                    <div class="location-icon"><i class="fas fa-map-pin"></i></div>
+                    <div class="address">
+                        <strong>Kabale main office</strong>
+                        <p>Opposite Kabale Shopping Arcade (KABODE Building), Kabale, Uganda</p>
+                    </div>
+                </div>
+                <!-- button that leads to location.html — auto open? we simply link, user taps to open map later but we also can set a link to location.html (you can place google maps there) -->
+                <a href="location.html" class="btn-location"><i class="fas fa-directions"></i> Open location page</a>
+            </div>
+
+            <!-- extra: hours + secondary contact (redundant but thorough) -->
+            <div class="hours-card">
+                <div class="hours-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div><span class="days">Monday – Saturday</span><br>7:00 am – 8:00 pm</div>
+                </div>
+                <div class="hours-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div><span class="days">Sunday</span><br>1:00 pm – 8:00 pm</div>
+                </div>
+                <div class="hours-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>4gcomputerelectronics<br>@gmail.com</div>
+                </div>
+                <div class="hours-item">
+                    <i class="fas fa-phone"></i>
+                    <div>+256 773 232643<br> (also WhatsApp)</div>
+                </div>
+            </div>
+
+            <!-- subtle map note: link to location.html again with pin -->
+            <div class="map-note">
+                <i class="fas fa-map-marked-alt"></i> Visit our shop at Kabale.  
+                <a href="location.html" style="color: var(--primary-red); font-weight:600; text-decoration: none;">→ detailed map</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>4G Computer Electronics</h4>
+                    <p>Your one-stop solution for computers, electronics, printing & design.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Explore</h4>
+                    <a href="index.html">Home</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-phone"></i> +256 773 232643</p>
+                    <p><i class="fas fa-envelope"></i> 4gcomputerelectronics@gmail.com</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Kabale</h4>
+                    <p>Opposite Kabale Shopping Arcade (KABODE)</p>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2025 4G Computer Electronics. All rights reserved. Admin panel is secret.
+            </div>
+        </div>
+    </footer>
+
+    <!-- mobile menu script (same as gallery) -->
+    <script>
+        (function() {
+            const mobileOpen = document.getElementById('mobileOpen');
+            const mobileClose = document.getElementById('mobileClose');
+            const mobileDrawer = document.getElementById('mobileDrawer');
+            const mobileOverlay = document.getElementById('mobileOverlay');
+            
+            function closeMobile() {
+                mobileDrawer.classList.remove('open');
+                mobileOverlay.style.display = 'none';
+            }
+            
+            if (mobileOpen) {
+                mobileOpen.addEventListener('click', () => {
+                    mobileDrawer.classList.add('open');
+                    mobileOverlay.style.display = 'block';
+                });
+            }
+            if (mobileClose) {
+                mobileClose.addEventListener('click', closeMobile);
+            }
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', closeMobile);
+            }
+        })();
+    </script>
+    <!-- optional: smooth auto open? we keep location.html link as button -->
+</body>
+</html>
