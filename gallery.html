@@ -1,0 +1,792 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4G Computer Electronics | Gallery</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="4g.png">
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Firebase SDK (modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        
+        // Your 4G Computer Electronics Firebase config (exactly as provided)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCmvLuqO5P5FrPazMktG-_acX9Q79eGuI",
+            authDomain: "gelectron-3739f.firebaseapp.com",
+            projectId: "gelectron-3739f",
+            storageBucket: "gelectron-3739f.firebasestorage.app",
+            messagingSenderId: "963423370606",
+            appId: "1:963423370606:web:ba8e080d866f5658b3d57f",
+            measurementId: "G-L9PSEVVLF4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Expose to global for gallery functions (non-module script can use)
+        window.fb = { db, collection, query, orderBy, onSnapshot };
+    </script>
+    <style>
+        /* ---------- LIGHT THEME – WHITE BACKGROUND, RED & YELLOW ACCENTS ---------- */
+        :root {
+            --pure-white: #ffffff;
+            --soft-gray: #f8f9fa;
+            --border-light: #e9ecef;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+            --primary-red: #ED1B24;
+            --soft-yellow: #F7FF9A;
+            --shadow-sm: 0 8px 20px rgba(0,0,0,0.02);
+            --shadow-hover: 0 20px 30px rgba(237,27,36,0.08);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--pure-white);
+            color: var(--text-dark);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ----- header / navigation ----- */
+        header {
+            background: var(--pure-white);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            color: var(--text-dark);
+        }
+        .brand-text .red {
+            color: var(--primary-red);
+            font-weight: 800;
+        }
+
+        /* desktop nav */
+        .desktop-nav {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .desktop-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: 0.2s;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+        }
+        .desktop-nav a:hover,
+        .desktop-nav a.active {
+            color: var(--primary-red);
+            border-bottom-color: var(--primary-red);
+        }
+
+        /* mobile menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            cursor: pointer;
+        }
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.2);
+            z-index: 200;
+        }
+        .mobile-drawer {
+            position: fixed;
+            top:0; right:-300px;
+            width: 280px;
+            height:100%;
+            background: white;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 201;
+            padding: 40px 24px;
+        }
+        .mobile-drawer.open {
+            right:0;
+        }
+        .close-mobile {
+            position: absolute;
+            top:20px; right:20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary-red);
+        }
+        .mobile-nav {
+            list-style: none;
+            margin-top: 40px;
+        }
+        .mobile-nav li {
+            margin-bottom: 20px;
+        }
+        .mobile-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: block;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        /* ----- HERO SECTION (gallery header) ----- */
+        .gallery-hero {
+            background: var(--pure-white);
+            padding: 60px 0 30px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .gallery-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .gallery-hero h1 span {
+            color: var(--primary-red);
+            background: var(--soft-yellow);
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 2.5rem;
+        }
+        .gallery-hero .tagline {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        /* business info cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            background: var(--soft-gray);
+            border-radius: 32px;
+            padding: 24px;
+            margin: 40px auto 0;
+            max-width: 1100px;
+            border: 1px solid var(--border-light);
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 8px 12px;
+            border-radius: 40px;
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .info-item i {
+            color: var(--primary-red);
+            font-size: 1.3rem;
+            min-width: 28px;
+        }
+        .info-item span {
+            font-weight: 500;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        /* category filter chips */
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+        .cat-chip {
+            background: white;
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.15s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .cat-chip:hover,
+        .cat-chip.active {
+            background: var(--primary-red);
+            color: white;
+            border-color: var(--primary-red);
+            box-shadow: 0 4px 12px rgba(237,27,36,0.2);
+        }
+
+        /* ----- GALLERY SECTIONS (white background) ----- */
+        .gallery-sections {
+            padding: 60px 0 80px;
+            background: var(--pure-white);
+        }
+        .category-section {
+            margin-bottom: 70px;
+            scroll-margin-top: 90px;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            border-left: 8px solid var(--primary-red);
+            padding-left: 24px;
+            margin-bottom: 20px;
+        }
+        .section-desc {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            max-width: 800px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            transition: 0.25s ease;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-red);
+        }
+        .product-img-wrapper {
+            height: 220px;
+            background: var(--soft-gray);
+            position: relative;
+            overflow: hidden;
+        }
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+        .price-badge {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: white;
+            color: var(--primary-red);
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 40px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-light);
+        }
+        .product-info {
+            padding: 22px 20px;
+        }
+        .product-info h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        .product-category-tag {
+            display: inline-block;
+            background: var(--soft-yellow);
+            color: var(--text-dark);
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(237,27,36,0.2);
+        }
+        .product-description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 18px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 48px;
+        }
+        .inquiry-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid var(--primary-red);
+        }
+        .inquiry-btn:hover {
+            background: white;
+            color: var(--primary-red);
+        }
+        .no-products {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--soft-gray);
+            border-radius: 48px;
+            color: var(--text-muted);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox-content {
+            background: white;
+            max-width: 800px;
+            width: 90%;
+            border-radius: 48px;
+            overflow: hidden;
+            box-shadow: 0 40px 70px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-light);
+        }
+        .lightbox-img {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+        }
+        .lightbox-details {
+            padding: 32px;
+        }
+        .lightbox-details h2 {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+        .lightbox-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin: 20px 0;
+        }
+        .lightbox-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--primary-red);
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 60px 0 30px;
+            border-top: 4px solid var(--primary-red);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-red);
+            padding-left: 16px;
+        }
+        .footer-col a, .footer-col p {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            transition: 0.2s;
+        }
+        .footer-col a:hover {
+            color: var(--primary-red);
+            padding-left: 6px;
+        }
+        .copyright {
+            text-align: center;
+            margin-top: 50px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* responsive */
+        @media (max-width: 800px) {
+            .desktop-nav { display: none; }
+            .mobile-menu-btn { display: block; }
+            .header-inner { height: 70px; }
+        }
+        @media (max-width: 600px) {
+            .gallery-hero h1 { font-size: 2.2rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .products-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+            .product-img-wrapper { height: 160px; }
+        }
+        @media (max-width: 400px) {
+            .products-grid { grid-template-columns: 1fr; }
+        }
+        /* fallback image style */
+        .img-fallback {
+            background: var(--soft-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- header -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo-area">
+                <img src="4g.png" alt="4G" class="logo-img" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2248%22%20height%3D%2248%22%20viewBox%3D%220%200%2048%2048%22%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2224%22%20r%3D%2220%22%20fill%3D%22%23ED1B24%22%2F%3E%3Ctext%20x%3D%229%22%20y%3D%2233%22%20fill%3D%22%23F7FF9A%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%3E4G%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                <span class="brand-text"><span class="red">4G</span> COMPUTER</span>
+            </div>
+            <ul class="desktop-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html" class="active">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <!-- admin is secret – no link -->
+            </ul>
+            <button class="mobile-menu-btn" id="mobileOpen"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- mobile drawer -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <button class="close-mobile" id="mobileClose"><i class="fas fa-times"></i></button>
+        <ul class="mobile-nav">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div style="margin-top:30px; padding-top:20px; border-top:1px solid var(--border-light);">
+            <p><i class="fas fa-phone" style="color:var(--primary-red)"></i> +256 773 232643</p>
+            <p><i class="fas fa-map-pin"></i> Kabale, Uganda</p>
+        </div>
+    </div>
+
+    <!-- gallery hero with company details -->
+    <section class="gallery-hero">
+        <div class="container">
+            <h1><span>4G</span> ELECTRONICS GALLERY</h1>
+            <div class="tagline">Your one-stop solution for computers and electronics services.</div>
+            <!-- business info cards -->
+            <div class="info-grid">
+                <div class="info-item"><i class="fas fa-calendar-alt"></i><span>Since 2017 · 8+ years</span></div>
+                <div class="info-item"><i class="fas fa-user-tie"></i><span>Mr. Manasseh NDAYISABA</span></div>
+                <div class="info-item"><i class="fas fa-map-marker-alt"></i><span>Opposite Kabale Shopping Arcade</span></div>
+                <div class="info-item"><i class="fas fa-phone-alt"></i><span>+256 773 232643</span></div>
+                <div class="info-item"><i class="fas fa-clock"></i><span>Mon-Sat 7am-8pm, Sun 1pm-8pm</span></div>
+                <div class="info-item"><i class="fas fa-star"></i><span>5.0★ verified</span></div>
+            </div>
+            <!-- category chips (will be populated dynamically but also static for UX) -->
+            <div class="category-filter" id="categoryChips">
+                <!-- js will add clickable chips, but static fallback -->
+            </div>
+        </div>
+    </section>
+
+    <!-- gallery sections (products injected) -->
+    <section class="gallery-sections">
+        <div class="container" id="categoriesContainer">
+            <div class="loading-state" id="loadingIndicator" style="text-align:center; padding:60px;">
+                <i class="fas fa-spinner fa-pulse fa-3x" style="color:var(--primary-red);"></i>
+                <p style="margin-top:20px;">Loading products...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+            <img src="" alt="" class="lightbox-img" id="lightboxImg">
+            <div class="lightbox-details">
+                <h2 id="lightboxTitle"></h2>
+                <p id="lightboxDesc"></p>
+                <div class="lightbox-price" id="lightboxPrice"></div>
+                <a href="contact.html" class="inquiry-btn" style="text-align:center; display:block; text-decoration:none;">Inquire now</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>4G Computer Electronics</h4>
+                    <p>Your trusted partner in computers, electronics, printing & design since 2017.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Services</h4>
+                    <p>IT & repair · Printing · Design · Media · Stationery</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Kabale office</h4>
+                    <p><i class="fas fa-phone"></i> +256 773 232643</p>
+                    <p>Opposite Kabale Shopping Arcade (KABODE)</p>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2025 4G Computer Electronics. All rights reserved. Admin panel is secret.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // ----- Firebase & gallery logic (white theme) -----
+        import { collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        
+        const db = window.fb.db;  // from global
+
+        // categories for 4G business (provided)
+        const BUSINESS_CATEGORIES = [
+            "Office & Stationery Products",
+            "Advertising & Display Products",
+            "Media & Visual Content Products",
+            "Computing & Electronics Products",
+            "IT Support & Technical Solutions",
+            "Custom Design & Branding Products",
+            "Printing & Reprographic Products",
+            "other"
+        ];
+
+        // DOM elements
+        const container = document.getElementById('categoriesContainer');
+        const loading = document.getElementById('loadingIndicator');
+        const categoryChipsDiv = document.getElementById('categoryChips');
+        
+        // lightbox elements
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxTitle = document.getElementById('lightboxTitle');
+        const lightboxDesc = document.getElementById('lightboxDesc');
+        const lightboxPrice = document.getElementById('lightboxPrice');
+        const lightboxClose = document.getElementById('lightboxClose');
+        
+        // close lightbox
+        lightboxClose.addEventListener('click', () => lightbox.classList.remove('active'));
+        lightbox.addEventListener('click', (e) => { if(e.target === lightbox) lightbox.classList.remove('active'); });
+
+        // category description helper
+        function getCategoryDesc(cat) {
+            const map = {
+                "Office & Stationery Products": "Notebooks, pens, filing, and all office essentials.",
+                "Advertising & Display Products": "Banners, roll-ups, signboards & promotional displays.",
+                "Media & Visual Content Products": "Video coverage, editing, and media production.",
+                "Computing & Electronics Products": "Computers, accessories, and electronic devices (new/used).",
+                "IT Support & Technical Solutions": "Maintenance, repair, networking, and IT consulting.",
+                "Custom Design & Branding Products": "Graphic design, T-shirt printing, ID cards, branding.",
+                "Printing & Reprographic Products": "Photocopying, digital printing, reprographic services.",
+                "other": "Other innovative products from 4G."
+            };
+            return map[cat] || "High quality product from 4G Computer Electronics.";
+        }
+
+        // build category chips dynamically
+        BUSINESS_CATEGORIES.forEach(cat => {
+            const chip = document.createElement('a');
+            chip.href = `#category-${cat.replace(/\s+/g,'-')}`;
+            chip.className = 'cat-chip';
+            chip.textContent = cat;
+            chip.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = `category-${cat.replace(/\s+/g,'-')}`;
+                const el = document.getElementById(targetId);
+                if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'});
+            });
+            categoryChipsDiv.appendChild(chip);
+        });
+
+        // listen to realtime updates
+        const q = query(collection(db, "glass_products"), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            loading.style.display = 'none';
+            
+            if (snapshot.empty) {
+                container.innerHTML = `<div class="no-products"><i class="fas fa-box-open fa-3x" style="color:var(--primary-red);"></i><h3>No products yet</h3><p>Check back later.</p></div>`;
+                return;
+            }
+
+            // group by category
+            const productsByCat = {};
+            BUSINESS_CATEGORIES.forEach(c => productsByCat[c] = []);
+            
+            snapshot.forEach(doc => {
+                const prod = doc.data();
+                prod.id = doc.id;
+                const cat = prod.category || 'other';
+                if (productsByCat[cat]) productsByCat[cat].push(prod);
+                else productsByCat['other'].push(prod);
+            });
+
+            // render sections
+            let htmlString = '';
+            BUSINESS_CATEGORIES.forEach(cat => {
+                const items = productsByCat[cat];
+                if (!items || items.length === 0) return;
+                
+                const sectionId = `category-${cat.replace(/\s+/g,'-')}`;
+                htmlString += `<section class="category-section" id="${sectionId}">`;
+                htmlString += `<h2 class="section-title">${cat}</h2>`;
+                htmlString += `<p class="section-desc">${getCategoryDesc(cat)}</p>`;
+                htmlString += `<div class="products-grid">`;
+
+                items.forEach(prod => {
+                    // fallback image if broken
+                    const imgOnError = `this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'><i class=\'fas fa-microchip fa-2x\'></i><p>${prod.title}</p></div>';`;
+                    
+                    htmlString += `<div class="product-card" data-product='${JSON.stringify(prod).replace(/'/g, "&#39;")}'>`;
+                    htmlString += `<div class="product-img-wrapper">`;
+                    htmlString += `<img class="product-img" src="${prod.image}" alt="${prod.title}" onerror="${imgOnError}">`;
+                    htmlString += `<div class="price-badge">${prod.price || 'Call for price'}</div>`;
+                    htmlString += `</div>`;
+                    htmlString += `<div class="product-info">`;
+                    htmlString += `<h3>${prod.title}</h3>`;
+                    htmlString += `<span class="product-category-tag">${prod.category || 'other'}</span>`;
+                    htmlString += `<p class="product-description">${prod.description || getCategoryDesc(prod.category)}</p>`;
+                    htmlString += `<button class="inquiry-btn quick-view"><i class="fas fa-eye"></i> Quick view</button>`;
+                    htmlString += `</div>`;
+                    htmlString += `</div>`;
+                });
+                htmlString += `</div></section>`;
+            });
+            container.innerHTML = htmlString;
+
+            // attach click to product cards (lightbox)
+            document.querySelectorAll('.product-card').forEach(card => {
+                const btn = card.querySelector('.quick-view');
+                const productData = card.dataset.product;
+                if (!productData) return;
+                try {
+                    const prod = JSON.parse(productData.replace(/&#39;/g, "'"));
+                    const showLightbox = () => {
+                        lightboxImg.src = prod.image;
+                        lightboxTitle.textContent = prod.title;
+                        lightboxDesc.textContent = prod.description || getCategoryDesc(prod.category);
+                        lightboxPrice.textContent = prod.price || 'Price on request';
+                        lightbox.classList.add('active');
+                    };
+                    btn.addEventListener('click', (e) => { e.stopPropagation(); showLightbox(); });
+                    card.addEventListener('click', (e) => { if (!e.target.classList.contains('inquiry-btn')) showLightbox(); });
+                } catch (e) { console.warn(e); }
+            });
+        });
+
+        // mobile menu
+        const mobileOpen = document.getElementById('mobileOpen');
+        const mobileClose = document.getElementById('mobileClose');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        function closeMobile() {
+            mobileDrawer.classList.remove('open');
+            mobileOverlay.style.display = 'none';
+        }
+        mobileOpen.addEventListener('click', () => {
+            mobileDrawer.classList.add('open');
+            mobileOverlay.style.display = 'block';
+        });
+        mobileClose.addEventListener('click', closeMobile);
+        mobileOverlay.addEventListener('click', closeMobile);
+
+        // smooth hash scrolling
+        document.querySelectorAll('.cat-chip').forEach(c => {
+            c.addEventListener('click', (e) => {
+                e.preventDefault();
+                const hash = c.getAttribute('href');
+                const target = document.querySelector(hash);
+                if(target) target.scrollIntoView({behavior:'smooth'});
+            });
+        });
+    </script>
+    <!-- small script for non-module fallback (mobile) -->
+    <script>
+        // ensure mobile overlay hidden after navigation
+        window.addEventListener('load', function() {
+            document.getElementById('mobileDrawer')?.classList.remove('open');
+            document.getElementById('mobileOverlay').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
