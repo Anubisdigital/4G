@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel · 4G Computer Electronics</title>
+    <!-- favicon (4g.png) - placed in root as instructed -->
+    <link rel="icon" href="4g.png" type="image/png">
+    <style>
+        /* THEME COLORS: #ED1B24 (vibrant red), #F7FF9A (soft yellow), black & shades */
+        :root {
+            --primary-red: #ED1B24;
+            --soft-yellow: #F7FF9A;
+            --pure-black: #000000;
+            --gray-900: #121212;
+            --gray-800: #1e1e1e;
+            --gray-700: #2d2d2d;
+            --gray-600: #3c3c3c;
+            --gray-300: #b0b0b0;
+            --white: #ffffff;
+            --glass-dark: rgba(0, 0, 0, 0.75);
+            --success: #27ae60;
+            --danger: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--pure-black);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            line-height: 1.5;
+        }
+
+        .admin-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* header & branding */
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--gray-700);
+            padding-bottom: 1.5rem;
+        }
+
+        .logo-wrapper {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            border: 3px solid var(--primary-red);
+            box-shadow: 0 0 15px rgba(237, 27, 36, 0.4);
+        }
+
+        .logo-wrapper img {
+            max-width: 70%;
+            max-height: 70%;
+            object-fit: contain;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-align: center;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+
+        .red-accent {
+            color: var(--primary-red);
+            font-weight: 800;
+        }
+
+        .tagline {
+            color: var(--soft-yellow);
+            font-size: 1.1rem;
+            margin-top: 6px;
+            background: rgba(247, 255, 154, 0.1);
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            display: inline-block;
+            border: 1px solid var(--soft-yellow);
+        }
+
+        .company-meta {
+            margin-top: 12px;
+            color: var(--gray-300);
+            font-size: 0.95rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .company-meta span i {
+            color: var(--primary-red);
+            margin-right: 5px;
+        }
+
+        /* tabs */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--gray-800);
+            padding: 10px;
+            border-radius: 60px;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--gray-700);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 40px;
+            color: var(--gray-300);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 0 1 auto;
+            white-space: nowrap;
+        }
+
+        .tab-btn i {
+            margin-right: 6px;
+        }
+
+        .tab-btn:hover {
+            color: var(--white);
+            background: rgba(237, 27, 36, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-red);
+            color: white;
+            box-shadow: 0 8px 20px rgba(237, 27, 36, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fade 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0.3; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* cards & forms */
+        .admin-card {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-700);
+            border-radius: 28px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.8rem;
+            font-weight: 500;
+            border-left: 5px solid var(--primary-red);
+            padding-left: 1.2rem;
+            color: var(--white);
+        }
+
+        h2 i {
+            color: var(--primary-red);
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--gray-300);
+            font-weight: 500;
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--primary-red);
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 16px;
+            font-size: 1rem;
+            color: var(--white);
+            transition: 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary-red);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(237, 27, 36, 0.3);
+        }
+
+        ::placeholder {
+            color: var(--gray-600);
+        }
+
+        select option {
+            background: var(--gray-800);
+        }
+
+        button {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            border: 1px solid transparent;
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        button:hover {
+            background: #b3121a;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(237, 27, 36, 0.5);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* preview image */
+        #preview {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            border-radius: 24px;
+            margin-bottom: 1.5rem;
+            border: 3px solid var(--gray-700);
+            display: none;
+            background: var(--gray-800);
+        }
+
+        /* products grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .product-card {
+            background: var(--gray-900);
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid var(--gray-700);
+            transition: all 0.2s;
+        }
+
+        .product-card:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px rgba(237, 27, 36, 0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--gray-800);
+            border-bottom: 1px solid var(--gray-700);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--soft-yellow);
+            margin-bottom: 0.4rem;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary-red);
+            margin: 0.5rem 0;
+        }
+
+        .product-category {
+            display: inline-block;
+            background: rgba(237, 27, 36, 0.15);
+            color: var(--soft-yellow);
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            border: 1px solid var(--primary-red);
+            margin: 8px 0 10px;
+        }
+
+        .product-description {
+            color: var(--gray-300);
+            font-size: 0.9rem;
+            margin: 0.8rem 0 1.2rem;
+            line-height: 1.5;
+        }
+
+        .product-actions button {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--gray-800);
+            padding: 1.5rem;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid var(--gray-700);
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--primary-red);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            color: var(--gray-300);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .category-breakdown {
+            background: var(--gray-800);
+            border-radius: 24px;
+            padding: 1.8rem;
+            border: 1px solid var(--gray-700);
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--gray-900);
+            border-radius: 40px;
+            margin-bottom: 8px;
+            border: 1px solid var(--gray-700);
+        }
+        .category-name {
+            color: var(--soft-yellow);
+        }
+        .category-count {
+            background: var(--primary-red);
+            padding: 2px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+
+        /* messages */
+        .messages-container {
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+        .message {
+            padding: 1rem 1.8rem;
+            border-radius: 60px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            background: var(--gray-800);
+            border-left: 6px solid;
+            box-shadow: 0 8px 20px black;
+        }
+        .message.success { border-color: var(--success); }
+        .message.error { border-color: var(--danger); }
+        .message.info { border-color: var(--primary-red); }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-300);
+        }
+        .loading-spinner {
+            border: 3px solid var(--gray-700);
+            border-top-color: var(--primary-red);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            animation: spin 0.8s infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .no-products {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--gray-900);
+            border-radius: 40px;
+            border: 1px dashed var(--gray-700);
+            color: var(--gray-300);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .back-link a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-link a:hover {
+            border-color: var(--primary-red);
+            color: var(--soft-yellow);
+        }
+
+        /* responsiveness */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .tabs { flex-direction: column; border-radius: 30px; }
+            .tab-btn { width: 100%; }
+        }
+    </style>
+    <!-- Font Awesome (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="admin-container">
+    <!-- messages container -->
+    <div id="messagesContainer" class="messages-container"></div>
+
+    <header>
+        <div class="logo-wrapper">
+            <!-- 4g.png logo (put in same folder) -->
+            <img src="4g.png" alt="4G Computer Electronics" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2245%22%20fill%3D%22%23ED1B24%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2268%22%20fill%3D%22%23F7FF9A%22%20font-size%3D%2248%22%20font-weight%3D%22bold%22%3E4G%3C%2Ftext%3E%3C%2Fsvg%3E')">
+        </div>
+        <h1><span class="red-accent">4G</span> COMPUTER ELECTRONICS</h1>
+        <div class="tagline"><i class="fas fa-bolt"></i> Your one-stop solution for computers and electronics services.</div>
+        <div class="company-meta">
+            <span><i class="fas fa-calendar-alt"></i> Since 2017 · 8+ years</span>
+            <span><i class="fas fa-user-tie"></i> Mr. Manasseh NDAYISABA (Manager)</span>
+        </div>
+    </header>
+
+    <!-- tabs navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="upload"><i class="fas fa-cloud-upload-alt"></i> Upload Product</button>
+        <button class="tab-btn" data-tab="manage"><i class="fas fa-boxes"></i> Manage Products</button>
+        <button class="tab-btn" data-tab="stats"><i class="fas fa-chart-pie"></i> Statistics</button>
+    </div>
+
+    <!-- UPLOAD TAB -->
+    <div id="upload-tab" class="tab-content active">
+        <div class="admin-card">
+            <h2><i class="fas fa-microchip"></i> New electronic item</h2>
+            <div class="form-group">
+                <label for="file-picker" class="required"><i class="fas fa-image"></i> Product image</label>
+                <input type="file" id="file-picker" accept="image/*">
+            </div>
+            <img id="preview" alt="preview">
+
+            <div class="form-group">
+                <label for="item-title" class="required">Product name</label>
+                <input type="text" id="item-title" placeholder="e.g. HP LaserJet Pro M404dn">
+            </div>
+
+            <div class="form-group">
+                <label for="item-price" class="required">Price (UGX / USD)</label>
+                <input type="text" id="item-price" placeholder="e.g. 850,000 UGX">
+            </div>
+
+            <div class="form-group">
+                <label for="item-category" class="required">Category</label>
+                <select id="item-category">
+                    <option value="">-- Select category --</option>
+                    <option value="Office & Stationery Products">Office & Stationery Products</option>
+                    <option value="Advertising & Display Products">Advertising & Display Products</option>
+                    <option value="Media & Visual Content Products">Media & Visual Content Products</option>
+                    <option value="Computing & Electronics Products">Computing & Electronics Products</option>
+                    <option value="IT Support & Technical Solutions">IT Support & Technical Solutions</option>
+                    <option value="Custom Design & Branding Products">Custom Design & Branding Products</option>
+                    <option value="Printing & Reprographic Products">Printing & Reprographic Products</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="item-desc">Description (optional)</label>
+                <textarea id="item-desc" rows="3" placeholder="Specs, features, condition, warranty..."></textarea>
+            </div>
+
+            <button id="submitBtn"><i class="fas fa-cloud-upload-alt"></i> UPLOAD PRODUCT</button>
+            <p id="status" style="margin-top: 15px; color: var(--soft-yellow);"></p>
+        </div>
+    </div>
+
+    <!-- MANAGE TAB -->
+    <div id="manage-tab" class="tab-content">
+        <div class="admin-card">
+            <h2><i class="fas fa-edit"></i> Manage electronic products</h2>
+            <div id="productsContainer"></div>
+        </div>
+    </div>
+
+    <!-- STATISTICS TAB -->
+    <div id="stats-tab" class="tab-content">
+        <div class="admin-card">
+            <h2><i class="fas fa-chart-line"></i> Inventory stats</h2>
+            <div class="stats-grid" id="statsContainer"></div>
+            <div id="categoryStats" class="category-breakdown"></div>
+        </div>
+    </div>
+
+    <!-- back link (placeholder) -->
+    <div class="back-link">
+        <a href="#"><i class="fas fa-store"></i> Back to public gallery</a>
+    </div>
+</div>
+
+<!-- FIREBASE MODULE SCRIPT + CUSTOM LOGIC -->
+<script type="module">
+    // ----------  FIREBASE IMPORTS  ----------
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+    import {
+        getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy
+    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    // ----- YOUR FIREBASE CONFIG (4G Computer Electronics) -----
+    const firebaseConfig = {
+        apiKey: "AIzaSyCCmvLuqO5P5FrPazMktG-_acX9Q79eGuI",
+        authDomain: "gelectron-3739f.firebaseapp.com",
+        projectId: "gelectron-3739f",
+        storageBucket: "gelectron-3739f.firebasestorage.app",
+        messagingSenderId: "963423370606",
+        appId: "1:963423370606:web:ba8e080d866f5658b3d57f",
+        measurementId: "G-L9PSEVVLF4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // ----------  CLOUDINARY CONFIG  ----------
+    const CLOUD_NAME = "dopuutcka";               // as specified: "cloud in art persist name is anubis8"
+    const UPLOAD_PRESET = "anubis8";            // using same for simplicity, must exist in cloudinary
+
+    // ----------  BUSINESS CATEGORIES  ----------
+    const businessCategories = [
+        "Office & Stationery Products",
+        "Advertising & Display Products",
+        "Media & Visual Content Products",
+        "Computing & Electronics Products",
+        "IT Support & Technical Solutions",
+        "Custom Design & Branding Products",
+        "Printing & Reprographic Products",
+        "other"
+    ];
+
+    // ----- DOM elements -----
+    const filePicker = document.getElementById('file-picker');
+    const preview = document.getElementById('preview');
+    const titleInput = document.getElementById('item-title');
+    const priceInput = document.getElementById('item-price');
+    const categorySelect = document.getElementById('item-category');
+    const descInput = document.getElementById('item-desc');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusP = document.getElementById('status');
+    const productsContainer = document.getElementById('productsContainer');
+    const statsContainer = document.getElementById('statsContainer');
+    const categoryStatsDiv = document.getElementById('categoryStats');
+    const messagesDiv = document.getElementById('messagesContainer');
+
+    // ---- helper: show toast message ----
+    function showMessage(type, text) {
+        const msg = document.createElement('div');
+        msg.className = `message ${type}`;
+        msg.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i> ${text}`;
+        messagesDiv.appendChild(msg);
+        setTimeout(() => {
+            msg.style.opacity = '0';
+            setTimeout(() => msg.remove(), 400);
+        }, 4500);
+    }
+
+    // preview image
+    filePicker.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+
+    // ----- TABS -----
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.getAttribute('data-tab');
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            tabContents.forEach(c => c.classList.remove('active'));
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+
+            // lazy load
+            if (tabId === 'manage') loadProducts();
+            if (tabId === 'stats') loadStatistics();
+        });
+    });
+
+    // ----- UPLOAD PRODUCT (with admin_key = "ANUBIS_SECRET_99" to match rules) -----
+    submitBtn.addEventListener('click', async () => {
+        const file = filePicker.files[0];
+        const title = titleInput.value.trim();
+        const price = priceInput.value.trim();
+        const category = categorySelect.value;
+        const desc = descInput.value.trim() || "High quality product from 4G Computer Electronics";
+
+        if (!file || !title || !price || !category) {
+            showMessage('error', 'Please fill all required fields (image, name, price, category).');
+            return;
+        }
+
+        statusP.innerText = "📤 Uploading image to Cloudinary...";
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> uploading...';
+
+        try {
+            // 1. upload to cloudinary
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+
+            const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            if (!cloudRes.ok) throw new Error('Cloudinary upload failed');
+            const cloudData = await cloudRes.json();
+            const imageUrl = cloudData.secure_url;
+
+            statusP.innerText = "💾 Saving to Firebase (with admin key)...";
+
+            // 2. save to firestore with admin_key to satisfy rule: request.resource.data.admin_key == "ANUBIS_SECRET_99"
+            const productData = {
+                title: title,
+                price: price,
+                category: category,
+                description: desc,
+                image: imageUrl,
+                createdAt: Date.now(),
+                business: "4G Computer Electronics",
+                admin_key: "ANUBIS_SECRET_99"      // exactly matches firestore rule
+            };
+
+            await addDoc(collection(db, "glass_products"), productData);   // collection name kept as glass_products? rule refers to glass_products, we keep same
+
+            showMessage('success', `✅ "${title}" uploaded successfully.`);
+            
+            // reset form
+            titleInput.value = ''; priceInput.value = ''; categorySelect.value = ''; descInput.value = '';
+            filePicker.value = ''; preview.style.display = 'none';
+            statusP.innerText = '';
+
+            // switch to manage tab
+            tabBtns[1].click(); 
+        } catch (err) {
+            console.error(err);
+            showMessage('error', 'Upload error: ' + err.message);
+            statusP.innerText = '';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> UPLOAD PRODUCT';
+        }
+    });
+
+    // ----- LOAD PRODUCTS (manage tab) -----
+    async function loadProducts() {
+        productsContainer.innerHTML = `<div class="loading"><div class="loading-spinner"></div><p>Loading products...</p></div>`;
+        try {
+            const q = query(collection(db, "glass_products"), orderBy("createdAt", "desc"));
+            const snap = await getDocs(q);
+            if (snap.empty) {
+                productsContainer.innerHTML = `<div class="no-products"><i class="fas fa-box-open fa-3x" style="color:var(--primary-red);"></i><h3>No products yet</h3><p>Upload your first electronic item.</p></div>`;
+                return;
+            }
+
+            let html = '<div class="products-grid">';
+            snap.forEach(docSnap => {
+                const p = docSnap.data();
+                const id = docSnap.id;
+                html += `<div class="product-card" data-id="${id}">
+                    <img src="${p.image}" alt="${p.title}" class="product-image" onerror="this.src='https://via.placeholder.com/300?text=4G'">
+                    <div class="product-info">
+                        <div class="product-title">${p.title}</div>
+                        <div class="product-price">${p.price}</div>
+                        <span class="product-category">${p.category || 'other'}</span>
+                        <div class="product-description">${p.description || ''}</div>
+                        <div class="product-actions">
+                            <button class="btn-danger delete-btn" data-id="${id}" data-title="${p.title}"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            productsContainer.innerHTML = html;
+
+            // attach delete events
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = btn.dataset.id;
+                    const title = btn.dataset.title;
+                    if (!confirm(`Delete "${title}" permanently?`)) return;
+
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+
+                    try {
+                        // to satisfy delete rule: resource.data.admin_key == "ANUBIS_SECRET_99" 
+                        // we need the document to have that field; it was saved with admin_key, so it's ok.
+                        await deleteDoc(doc(db, "glass_products", id));
+                        showMessage('success', `"${title}" deleted.`);
+                        // re-load list and stats
+                        loadProducts();
+                        loadStatistics();
+                    } catch (err) {
+                        showMessage('error', 'Delete failed: ' + err.message);
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                    }
+                });
+            });
+        } catch (err) {
+            productsContainer.innerHTML = `<div class="no-products"><i class="fas fa-exclamation-triangle"></i> Error: ${err.message}</div>`;
+        }
+    }
+
+    // ----- LOAD STATISTICS -----
+    async function loadStatistics() {
+        statsContainer.innerHTML = `<div class="loading"><div class="loading-spinner"></div><p>stats...</p></div>`;
+        try {
+            const snap = await getDocs(collection(db, "glass_products"));
+            const total = snap.size;
+            const catCount = {};
+            businessCategories.forEach(c => catCount[c] = 0);
+
+            snap.forEach(d => {
+                const cat = d.data().category || 'other';
+                if (catCount[cat] !== undefined) catCount[cat]++;
+                else catCount['other']++;
+            });
+
+            const activeCategories = Object.values(catCount).filter(v => v > 0).length;
+            const maxInCat = Math.max(...Object.values(catCount), 0);
+
+            statsContainer.innerHTML = `
+                <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Total items</div></div>
+                <div class="stat-card"><div class="stat-number">${businessCategories.length}</div><div class="stat-label">Categories</div></div>
+                <div class="stat-card"><div class="stat-number">${activeCategories}</div><div class="stat-label">Active cats</div></div>
+                <div class="stat-card"><div class="stat-number">${maxInCat}</div><div class="stat-label">Most in cat</div></div>
+            `;
+
+            // category breakdown
+            let catHtml = '<h3 style="color:var(--soft-yellow); margin-bottom:1rem;"><i class="fas fa-tags"></i> Breakdown</h3>';
+            businessCategories.forEach(cat => {
+                const cnt = catCount[cat] || 0;
+                if (cnt > 0) {
+                    catHtml += `<div class="category-item"><span class="category-name">${cat}</span><span class="category-count">${cnt}</span></div>`;
+                }
+            });
+            categoryStatsDiv.innerHTML = catHtml;
+        } catch (err) {
+            statsContainer.innerHTML = `<div class="no-products">Stats error: ${err.message}</div>`;
+        }
+    }
+
+    // initial load (manage + stats background)
+    loadProducts();
+    loadStatistics();
+
+    // expose for debugging (optional)
+    window.admin = { db, loadProducts, loadStatistics };
+</script>
+<!-- fallback for old browsers (not needed) -->
+</body>
+</html>
